@@ -9,12 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      Username: {
+      UserName: {
         type: Sequelize.STRING,
         unique: true,
         allowNull:false,
-
-
       },
       email: {
         type: Sequelize.STRING,
@@ -28,8 +26,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:false,
         validate:{
-        isLowercase: true,
-        isUppercase: true,
         len: [3,20]
         }
       },
