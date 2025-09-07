@@ -4,13 +4,13 @@ const { UserService } = require('../services');
 const { SuccessResponse, ErrorResponse } = require('../utils/common');
 
 /**
-* POST : /user
+* signup : /user
 * req-body {UserName:'Xyz', email:abc@gmail.com, password:123}
 */
 
-async function createUser(req, res) {
+async function signup(req, res) {
     try{
-        const response = await UserService.createUser({
+        const response = await UserService.signup({
             UserName: req.body.UserName,
             email: req.body.email,
             password: req.body.password
@@ -48,8 +48,32 @@ async function getAllUser(req,res){
     }
 }
 
+/**
+* signin : /user
+* req-body {UserName:'Xyz', email:abc@gmail.com, password:123}
+*/
+
+async function signin(req, res) {
+    try{
+        const response = await UserService.signin({
+            email: req.body.email,
+            password: req.body.password
+        });
+        SuccessResponse.data = response;
+        return res
+                .status(StatusCodes.ACCEPTED)
+                .json(SuccessResponse)
+    } catch(error) {
+        ErrorResponse.error = error;
+        return res 
+            .status(error.statusCode)
+            .json(ErrorResponse)
+    }
+}
+
 
 module.exports={
-    createUser,
-    getAllUser
+    signup,
+    getAllUser,
+    signin
 }

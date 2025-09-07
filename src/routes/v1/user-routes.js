@@ -5,9 +5,9 @@ const { Usermiddleware } = require('../../middlewares')
 const router = express.Router();
 
 // /api/v1/signup POST
-router.post('/',
+router.post('/signup',
     Usermiddleware.validateCreateRequest,
-    UserController.createUser
+    UserController.signup
 );
 
 // /api/v1/signup GET
@@ -15,5 +15,9 @@ router.get('/',
     UserController.getAllUser
 );
 
+// /api/v1/signin GET
+router.post('/signin',
+    UserController.signin
+);
 
 module.exports= router;
