@@ -6,6 +6,7 @@ const { ServerConfig } = require('../../config')
     try{
         return bycrypt.compareSync(plainPassword, encryptPassword);
     }catch(error){
+        console.log("1");
         console.log(error);
         throw error;
     }
@@ -13,7 +14,7 @@ const { ServerConfig } = require('../../config')
 
  function createToken(input){
     try{
-        return jwt.sign(input, ServerConfig.JWT_SCERET, {expiresIn: ServerConfig.JWT_ENTRY});
+        return jwt.sign(input, ServerConfig.JWT_SECRET, {expiresIn: ServerConfig.JWT_EXPIRY});
     }catch(error){
         console.log(error);
         throw error;

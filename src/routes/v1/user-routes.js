@@ -17,6 +17,7 @@ router.get('/',
 
 // /api/v1/signin GET
 router.post('/signin',
+    Usermiddleware.validateCreateRequest,
     UserController.signin
 );
 

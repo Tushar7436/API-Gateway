@@ -36,9 +36,9 @@ async function signin(data){
     try{
         const user = await userRepository.getUserEmail(data.email);
         if(!user){
-            throw new AppError('Invalid Request', StatusCodes.NOT_FOUND);
+            throw new AppError('No user Found for this email', StatusCodes.NOT_FOUND);
         }
-        const passwordMatch = Auth.checkPassword(data.password, user.password);        
+        const passwordMatch = await Auth.checkPassword(data.password, user.password); 
         if(!passwordMatch) {
             throw new AppError('Invalid password', StatusCodes.BAD_REQUEST);
         }
@@ -46,6 +46,10 @@ async function signin(data){
         return jwt;
     } catch(error){
         console.log(error);
+        // Only throw generic error for unexpected errors, not for our custom AppErrors
+        if(error instanceof AppError) {
+            throw error;
+        }
         throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
      }
 }
