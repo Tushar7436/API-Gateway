@@ -4,18 +4,18 @@ const { UserController } = require('../../controllers');
 const { Usermiddleware } = require('../../middlewares')
 const router = express.Router();
 
-// /api/v1/signup POST
+// /api/v1/user/signup POST
 router.post('/signup',
     Usermiddleware.validateCreateRequest,
     UserController.signup
 );
 
-// /api/v1/signup GET
+// /api/v1/user/signup GET
 router.get('/',
     UserController.getAllUser
 );
 
-// /api/v1/signin GET
+// /api/v1/user/signin GET
 router.post('/signin',
     Usermiddleware.validateCreateRequest,
     UserController.signin
