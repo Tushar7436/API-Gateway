@@ -78,7 +78,7 @@ async function isAuthenticated(token) {
 
 async function addRoletoUser(data){
     try{
-        const user = await userRepository.get(id);
+        const user = await userRepository.get(data.id);
         if(!user) {
         throw new AppError('No user found for the given id', StatusCodes.NOT_FOUND);
         }
@@ -95,10 +95,29 @@ async function addRoletoUser(data){
      }
 }
 
+async function isAdmin(id){
+    try{
+        const user = await userRepository.get(id);
+        if(!user) {
+        throw new AppError('No user found for the given id', StatusCodes.NOT_FOUND);
+        }
+        const adminrole = await roleRepository.getRoleByName(ENUMS.USER_ROLES_ENUMS.ADMIN);
+        if(!adminrole){
+        throw new AppError('No user found for the given role', StatusCodes.NOT_FOUND);
+        }
+        return user.hasRole(adminrole);
+    } catch(error){
+        console.log(error);
+        if(error instanceof AppError) throw error;
+        throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+     }
+}
+
 module.exports = {
     signup,
     getAllUser,
     signin,
     isAuthenticated,
-    addRoletoUser
+    addRoletoUser, 
+    isAdmin
 }

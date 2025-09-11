@@ -5,7 +5,7 @@ const { ErrorResponse } = require('../utils/common');
 const AppError = require("../utils/errors/app-error");
 
 function validateCreateRequest(req,res,next) {
-    if (req.route.path.includes('signup') || req.path.includes('signup')) {
+    if (req.route.path.includes('signup')) {
         if(!req.body.UserName) {
             ErrorResponse.message = "Something went wrong while creating the UserName",
             ErrorResponse.error = new AppError(['UserName is not found in the incoming request in the correct form'],StatusCodes.BAD_REQUEST);
@@ -46,7 +46,18 @@ async function checkAuth(req, res, next) {
     }
     
 }
+
+ async function isAdmin(req, res, next) {
+    const response = await UserService.isAdmin(req.user);
+    if(!response) {
+        return res 
+                .status(StatusCodes.UNAUTHORIZED)
+                .json({message:"USer not authorized for this action"});
+    }
+    next(); 
+ }
 module.exports = {
     validateCreateRequest,
-    checkAuth
+    checkAuth,
+    isAdmin
 }

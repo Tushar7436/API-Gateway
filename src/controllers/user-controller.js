@@ -76,7 +76,7 @@ async function signin(req, res) {
 * req-body {UserName:'Xyz', email:abc@gmail.com, password:123}
 */
 
-async function signin(req, res) {
+async function addRoleToUser(req, res) {
     try{
         const response = await UserService.addRoletoUser({
             role: req.body.role,
@@ -97,5 +97,6 @@ async function signin(req, res) {
 module.exports={
     signup,
     getAllUser,
-    signin
+    signin,
+    addRoleToUser
 }
