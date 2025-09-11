@@ -6,6 +6,8 @@ const { ServerConfig, Logger } = require('./config');
 const apiRoutes = require('./routes');
 const app = express();
 
+// const {user, Role} = require('./models');
+
 app.use(cors());
 
 const limiter = rateLimit({
@@ -30,7 +32,11 @@ app.use('/flightService', proxy(ServerConfig.FLIGHT_SERVICE, {
 }));
 
 
-app.listen(ServerConfig.PORT, () => {
+app.listen(ServerConfig.PORT, async () => {
     console.log(`successfully started the server on PORT: ${ServerConfig.PORT}`);
     Logger.info("Successfully started the server");
+    // user = await user.findByPk(6);
+    // role = await Role.findByPk();
+    // console.log(role, user);
+    // user.addRole(role);
 });

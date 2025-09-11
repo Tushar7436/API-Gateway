@@ -1,15 +1,16 @@
 const { StatusCodes } = require('http-status-codes');
-
-const { UserRepository } = require('../repositories')
+const { UserRepository, RoleRepository } = require('../repositories')
 const AppError = require('../utils/errors/app-error')
-
-const  { Auth }   = require('../utils/common')
+const  { Auth, ENUMS }   = require('../utils/common')
 const userRepository = new UserRepository();
+const roleRepository = new RoleRepository();
 
 async function signup(data) {
     try {
-        const response = await userRepository.create(data);
-        return response;
+        const user = await userRepository.create(data);
+        const role = await roleRepository.getRoleByName(ENUMS.USER_ROLES_ENUMS.CUSTOMER);
+        user.addRole(role);
+        return user;
     } 
     catch(error){
         if(error.name == 'SequelizeValidationError' || error.name == 'SequelizeUniqueConstraintError') { 
@@ -19,7 +20,7 @@ async function signup(data) {
             });
             throw new AppError(explanation,StatusCodes.BAD_REQUEST);
         }
-        throw new AppError('Canot create a new user object', StatusCodes.INTERNAL_SERVER_ERROR);
+        throw new AppError('Can not create a new user object', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -75,10 +76,29 @@ async function isAuthenticated(token) {
     }
 }
 
+async function addRoletoUser(data){
+    try{
+        const user = await userRepository.get(id);
+        if(!user) {
+        throw new AppError('No user found for the given id', StatusCodes.NOT_FOUND);
+        }
+        const role = await roleRepository.getRoleByName(data.role);
+        if(!role) {
+        throw new AppError('Canot create a new user role', StatusCodes.NOT_FOUND);
+        }
+        user.addRole(role);
+        return user;
+    } catch(error){
+        console.log(error);
+        if(error instanceof AppError) throw error;
+        throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+     }
+}
 
 module.exports = {
     signup,
     getAllUser,
     signin,
-    isAuthenticated
+    isAuthenticated,
+    addRoletoUser
 }
