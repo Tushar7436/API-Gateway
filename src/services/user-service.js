@@ -10,7 +10,13 @@ async function signup(data) {
         const user = await userRepository.create(data);
         const role = await roleRepository.getRoleByName(ENUMS.USER_ROLES_ENUMS.CUSTOMER);
         user.addRole(role);
-        return user;
+        const jwt = Auth.createToken({id:user.id, email: user.email, userName: user.UserName});
+        return {
+            jwt: jwt,
+            UserId: user.id,
+            recepientEmail:user.email,
+            userName: user.UserName,
+        };
     } 
     catch(error){
         if(error.name == 'SequelizeValidationError' || error.name == 'SequelizeUniqueConstraintError') { 
@@ -43,8 +49,14 @@ async function signin(data){
         if(!passwordMatch) {
             throw new AppError('Invalid password', StatusCodes.BAD_REQUEST);
         }
-        const jwt = Auth.createToken({id:user.id, email: user.email});
-        return jwt;
+        const jwt = Auth.createToken({id:user.id, email: user.email, userName: user.UserName});
+        return {
+            jwt: jwt,
+            UserId: user.id,
+            recepientEmail:user.email,
+            userName: user.UserName
+        };
+
     } catch(error){
         console.log(error);
         // Only throw generic error for unexpected errors, not for our custom AppErrors
